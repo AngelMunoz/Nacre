@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+
+    <script type="importmap">
+      {
+        "imports": {
+          "https://jspm.dev/__web-dev-server__web-socket.js": "http://localhost:5000/__web-dev-server__web-socket.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <script>
+      window.__WTR_CONFIG__ = {};
+    </script>
+    <script type="module">
+      import {
+        mocha,
+        sessionFinished,
+        sessionFailed,
+      } from "https://jspm.dev/@web/test-runner-mocha";
+      try {
+        // setup mocha
+        mocha.setup({ ui: "bdd" });
+
+        {{~ for script in standalone }}
+        await import("{{script}}");
+        {{end}}
+        {{ for key in (object.keys grouped) }}
+          // {{ key }}
+          {{~ for value in grouped[key] }}
+            await import("{{value}}")
+          {{end}}
+        {{end}}
+        {{ for value in grouped["Values"] }}
+          await import("{{value}}")
+        {{end}}
+        // run the tests, and notify the test runner after finishing
+        mocha.run(() => {
+          sessionFinished();
+        });
+      } catch (error) {
+        console.error(error);
+        // notify the test runner about errors
+        sessionFailed(error);
+      }
+    </script>
+  </body>
+</html>
