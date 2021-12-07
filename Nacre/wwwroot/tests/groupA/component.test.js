@@ -1,16 +1,23 @@
+import "../../index.js"
 import { expect } from 'https://jspm.dev/@esm-bundle/chai';
-import { add } from "/index.js";
+import { fixture } from 'https://jspm.dev/@open-wc/testing-helpers';
 
 describe("Component Tests", () => {
-    before(() => {
-        // runs once before the first test in this block
-        let div = document.createElement("div");
-        div.id = "findMe";
-        document.body.appendChild(div);
+    it('<my-element></my-element> renders', async () => {
+        /**
+         * @type {import('../../index.js').MyElement}
+         */
+        const element = await fixture("<my-element></my-element>")
+
+        expect(element).to.not.be.undefined;
+        expect(element).to.not.be.null;
     });
-    it('div exists', () => {
-        let div = document.querySelector("#findMe");
-        expect(div).to.not.be.undefined;
-        expect(div).to.not.be.null;
+    it('Inner Div exists', async () => {
+        /**
+         * @type {import('../../index.js').MyElement}
+         */
+        const element = await fixture("<my-element></my-element>")
+        let innerDiv = element.shadowRoot.querySelector("div")
+        expect(innerDiv.getAttribute("data-value")).to.equal("10");
     });
 });

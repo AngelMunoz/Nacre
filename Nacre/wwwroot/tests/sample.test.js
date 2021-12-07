@@ -1,5 +1,5 @@
 import { expect } from 'https://jspm.dev/@esm-bundle/chai';
-import { add } from "/index.js";
+import { add } from "../index.js";
 
 describe("Sum Tests Sample", () => {
     it('should add numbers', () => {

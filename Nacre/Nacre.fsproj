@@ -19,6 +19,7 @@
       <PackageReference Include="Giraffe" Version="5.0.0" />
       <PackageReference Include="Microsoft.Playwright" Version="1.17.2" />
       <PackageReference Include="scriban" Version="5.0.0" />
+      <PackageReference Include="Spectre.Console" Version="0.43.0" />
     </ItemGroup>
 
 </Project>

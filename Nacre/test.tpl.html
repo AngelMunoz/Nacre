@@ -5,7 +5,8 @@
     <script type="importmap">
       {
         "imports": {
-          "https://jspm.dev/__web-dev-server__web-socket.js": "http://localhost:5000/__web-dev-server__web-socket.js"
+          "https://jspm.dev/__web-dev-server__web-socket.js": "http://localhost:5000/__web-dev-server__web-socket.js",
+          "lit": "https://jspm.dev/lit"
         }
       }
     </script>
@@ -13,7 +14,12 @@
   <body>
     <div id="mocha"></div>
     <script>
-      window.__WTR_CONFIG__ = {};
+      window.__WTR_CONFIG__ = {
+        testFile: {{ (runtimeConfig?.testFile) ?? "undefined" }},
+        watch: {{ runtimeConfig?.watch ?? false }},
+        debug: {{ runtimeConfig?.debug ?? true }},
+        testFrameworkConfig: {{ runtimeConfig?.testFrameworkConfig ?? "undefined" }},
+      };
     </script>
     <script type="module">
       import {
@@ -33,9 +39,6 @@
           {{~ for value in grouped[key] }}
             await import("{{value}}")
           {{end}}
-        {{end}}
-        {{ for value in grouped["Values"] }}
-          await import("{{value}}")
         {{end}}
         // run the tests, and notify the test runner after finishing
         mocha.run(() => {

@@ -6,12 +6,79 @@ open Giraffe
 open System.Text.Json
 open Microsoft.AspNetCore.Builder
 
+
+[<Struct>]
+type TestError =
+    { actual: obj
+      expected: obj
+      message: string
+      name: string
+      stack: string }
+
+[<Struct>]
+type Test =
+    { name: string
+      passed: bool
+      duration: int
+      error: TestError voption }
+
+[<Struct>]
+type Suite =
+    { name: string
+      suites: Suite array
+      tests: Test array }
+
+[<Struct>]
+type ExecutionResult =
+    { logs: obj seq
+      errors: obj seq
+      passed: bool
+      testResults: Suite }
+
 type SendMessagePayload =
     { ``type``: string
       sessionId: string option
       testFile: string option
       userAgent: string option
-      result: obj option }
+      result: ExecutionResult voption }
+
+[<RequireQualifiedAccess>]
+module TestLogger =
+
+    let private logError (error: TestError) =
+
+        printfn $"{error.name}: [Actual: {error.actual} - Expected: {error.expected}]"
+        printfn $"\t{error.message}"
+        printfn "\t%s" error.stack
+
+    let private logTest (test: Test) =
+        printfn $"{test.name} - [Passed: {test.passed} {test.duration}ms]"
+
+        match test.error with
+        | ValueNone -> ()
+        | ValueSome error -> logError error
+
+    let rec private logSuite (suite: Suite) =
+        for suite in suite.suites do
+            logSuite suite
+
+        printfn $"Suite: {suite.name}"
+
+        for test in suite.tests do
+            logTest test
+
+    let private logExecutionResult (result: ExecutionResult ValueOption) =
+        match result with
+        | ValueSome result ->
+            printfn $"Passed: {result.passed}"
+            logSuite result.testResults
+        | ValueNone -> ()
+
+    let LogMessage (payload: SendMessagePayload) =
+        let agent = defaultArg payload.userAgent ""
+        printfn $"Runnning Tests in {agent}:"
+        logExecutionResult payload.result
+
 
 let getStandaloneScripts () =
     Directory.EnumerateFiles("./wwwroot/tests", "*.js")
@@ -45,7 +112,12 @@ let clientHandler _ (ctx: HttpContext) =
         let! result =
             tpl.RenderAsync(
                 {| standalone = standalone
-                   grouped = grouped |}
+                   grouped = grouped
+                   runtimeConfig =
+                    {| testFile = None
+                       watch = false
+                       debug = true
+                       testFrameworkConfig = None |} |}
             )
 
         return! ctx.WriteHtmlStringAsync(result)
@@ -60,7 +132,7 @@ let socketScriptHandler _ (ctx: HttpContext) =
 let clientMessageHandler _ (ctx: HttpContext) =
     task {
         let! msg = JsonSerializer.DeserializeAsync<SendMessagePayload>(ctx.Request.Body)
-        printfn "%A" msg
+        TestLogger.LogMessage msg
         return! ctx.WriteJsonAsync({|  |})
     }
 
