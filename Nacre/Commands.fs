@@ -87,7 +87,6 @@ type TestRunnerArgs =
 
 module Commands =
 
-    open System.IO
     open Microsoft.Playwright
 
     let private getAllScripts rootDir testDir =
@@ -167,6 +166,7 @@ module Commands =
 
     let runTests (opts: TestRunnerOptions) =
         let rootDir = defaultArg opts.serveDirectory "./"
+
         let testsDir = opts.testsDirectory
 
         let suite =
