@@ -5,14 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (console)",
+            "name": "Run Test Sample Project",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/Nacre/bin/Debug/net6.0/Nacre.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/Nacre",
-            "console": "internalConsole",
+            "args": [
+                "--all-files",
+                "true"
+            ],
+            "cwd": "${workspaceFolder}/samples/sample-project",
+            "console": "integratedTerminal",
             "stopAtEntry": false
         },
         {

@@ -1,21 +1,20 @@
 <html>
   <head>
     <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
-
     <script type="importmap">
       {
         "imports": {
-          "https://jspm.dev/__web-dev-server__web-socket.js": "http://localhost:5000/__web-dev-server__web-socket.js",
-          "lit": "https://jspm.dev/lit"
+          "https://jspm.dev/__web-dev-server__web-socket.js": "/__web-dev-server__web-socket.js"
         }
       }
     </script>
   </head>
   <body>
     <div id="mocha"></div>
+    <script src="https://jspm.dev/es-module-shims" type="module"></script>
     <script>
       window.__WTR_CONFIG__ = {
-        testFile: {{ (runtimeConfig?.testFile) ?? "undefined" }},
+        testFile: {{ runtimeConfig?.testFile ?? "undefined" }},
         watch: {{ runtimeConfig?.watch ?? false }},
         debug: {{ runtimeConfig?.debug ?? true }},
         testFrameworkConfig: {{ runtimeConfig?.testFrameworkConfig ?? "undefined" }},
@@ -43,11 +42,13 @@
         // run the tests, and notify the test runner after finishing
         mocha.run(() => {
           sessionFinished();
+          console.info("Nacre:Finished:true");
         });
       } catch (error) {
         console.error(error);
         // notify the test runner about errors
         sessionFailed(error);
+        console.info("Nacre:Finished:true");
       }
     </script>
   </body>

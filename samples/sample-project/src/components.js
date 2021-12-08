@@ -1,5 +1,4 @@
-
-import { LitElement, html } from "lit";
+import { LitElement, html } from "https://jspm.dev/lit";
 
 export class MyElement extends LitElement {
     constructor() {
@@ -13,10 +12,3 @@ export class MyElement extends LitElement {
 }
 customElements.define("my-element", MyElement);
 
-
-export function add(a, b) {
-    if (typeof a !== 'number' || typeof b !== 'number') {
-        // throw new TypeError("Both parameters must be numbers");
-    }
-    return (+a) + (+b);
-}

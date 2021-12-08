@@ -1,11 +1,5 @@
 import { expect } from 'https://jspm.dev/@esm-bundle/chai';
-import { add } from "/index.js";
-// write your tests inline
-describe('HTML tests', () => {
-    it('works', () => {
-        expect('foo').to.equal('foo');
-    });
-});
+import { add } from "../src/math.js";
 
 describe("Sum Tests", () => {
     it('should add numbers', () => {

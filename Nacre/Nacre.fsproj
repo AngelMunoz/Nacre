@@ -6,7 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Program.fs" />
+      <Compile Include="Types.fs" />
+      <Compile Include="Extensions.fs" />
+      <Compile Include="Server.fs" />
+      <Compile Include="Commands.fs" />
+      <Compile Include="Program.fs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -15,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="AngleSharp" Version="1.0.0-alpha-844" />
+      <PackageReference Include="Argu" Version="6.1.1" />
       <PackageReference Include="Giraffe" Version="5.0.0" />
       <PackageReference Include="Microsoft.Playwright" Version="1.17.2" />
       <PackageReference Include="scriban" Version="5.0.0" />
